@@ -1,77 +1,63 @@
-public class CustomTeamA implements Team{
-	
-	public String getTeamName(){
-		return "Horriver Plate";
-	}
-	
-	public void setTeamSide(TeamSide side){
-		
-	}
-	
-	public Robot buildRobot(GameSimulator s, int index){
-		if(index == 0)
-			return new Attacker(s);
-		if(index == 1)
-			return new Goalier(s);
+public class CustomTeamA implements Team {
+    private static final int MAX_INACTIVITY_PERIOD = 1000;
+    private static final float GOALIER_SPEED_MULTIPLIER = 1.5f;
 
-		// By default, return a new attacker
-		return new Attacker(s);
-	}
-	
-	class Attacker extends RobotBasic{
-		Attacker(GameSimulator s){
-			super(s);
-		}
-		
-		float speedMultiplier = (float)Math.random() * 10 + 10;
-		
-		Sensor locator;
+    private long lastActiveTime = 0;
 
-		public void setup(){
-			System.out.println("Running!");
-			locator = getSensor("BALL");
-		}
+    public String getTeamName() {
+        return "Horriver Plate";
+    }
 
-		public void loop(){
-			float angle = locator.readValue(0);
+    public void setTeamSide(TeamSide side) {}
 
-			setRotation(angle * speedMultiplier);
-			setSpeed(0.5f,0);
-			delay(100);
-		}
-	}
-	
-	class Goalier extends RobotBasic{
-		Goalier(GameSimulator s){
-			super(s);
-		}
+    public Robot buildRobot(GameSimulator s, int index) {
+        if (index == 0)
+            return new Attacker(s);
+        else if (index == 1)
+            return new Goalier(s);
 
-		float divisor = (float)Math.random() * 200 + 180;
-		
-		Sensor locator;
-		// Front, left, back, right
-		Sensor[] ultrasonic_sensors = new Sensor[4];
-		
-		public void run(){
-			locator = getSensor("BALL");
+        return new Attacker(s);
+    }
 
-			ultrasonic_sensors[0] = getSensor("ULTRASONIC_FRONT");
-			ultrasonic_sensors[1] = getSensor("ULTRASONIC_LEFT");
-			ultrasonic_sensors[2] = getSensor("ULTRASONIC_BACK");
-			ultrasonic_sensors[3] = getSensor("ULTRASONIC_RIGHT");
-			
-			System.out.println("Running!");
-			while(true){
-				float angle = locator.readValue(0);
-				
-				if(Math.abs(angle) < 45)
-					setSpeed(0f, angle / divisor);
-				else
-					setSpeed(0f, 0f);
-				
-				delay(100);
-			}
-		}
-	}
-	
+    class Attacker extends RobotBasic {
+        Attacker(GameSimulator s) {
+            super(s);
+        }
+
+        float speedMultiplier = 2.0f;
+
+        Sensor locator;
+
+        public void setup() {
+            System.out.println("Attacker: Running!");
+            locator = getSensor("BALL");
+        }
+
+        public void loop() {
+            float angle = locator.readValue(0);
+
+            setRotation(angle * speedMultiplier);
+            setSpeed(1.0f, 0);
+        }
+    }
+
+    class Goalier extends RobotBasic {
+        Goalier(GameSimulator s) {
+            super(s);
+        }
+
+        Sensor locator;
+
+        public void setup() {
+            System.out.println("Goalier: Running!");
+            locator = getSensor("BALL");
+        }
+
+        public void loop() {
+            float angle = locator.readValue(0);
+
+            setRotation(angle * GOALIER_SPEED_MULTIPLIER);
+            setSpeed(1.0f, 0);
+        }
+    }
 }
