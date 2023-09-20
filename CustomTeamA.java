@@ -1,7 +1,7 @@
 public class CustomTeamA implements Team{
 	
 	public String getTeamName(){
-		return "Emerotecos";
+		return "Horriver Plate";
 	}
 	
 	public void setTeamSide(TeamSide side){
@@ -23,7 +23,7 @@ public class CustomTeamA implements Team{
 			super(s);
 		}
 		
-		float speedMultiplier = (float)Math.random() * 5 + 5;
+		float speedMultiplier = (float)Math.random() * 10 + 10;
 		
 		Sensor locator;
 
@@ -46,7 +46,7 @@ public class CustomTeamA implements Team{
 			super(s);
 		}
 
-		float divisor = (float)Math.random() * 150 + 70;
+		float divisor = (float)Math.random() * 200 + 180;
 		
 		Sensor locator;
 		// Front, left, back, right
@@ -64,7 +64,7 @@ public class CustomTeamA implements Team{
 			while(true){
 				float angle = locator.readValue(0);
 				
-				if(Math.abs(angle) < 90)
+				if(Math.abs(angle) < 45)
 					setSpeed(0f, angle / divisor);
 				else
 					setSpeed(0f, 0f);
